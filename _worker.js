@@ -1,7 +1,7 @@
 // @ts-nocheck
 // <!--GAMFC-->version base on commit 43fad05dcdae3b723c53c226f8181fc5bd47223e, time is 2023-06-22 15:20:02 UTC<!--GAMFC-END-->.
 // @ts-ignore
-// https://github.com/bia-pain-bache/BPB-Worker-Panel
+// https://github.com/mehdint/Avan-Worker-Panel-main
 
 import { connect } from 'cloudflare:sockets';
 
@@ -122,7 +122,7 @@ export default {
 
                     case '/panel':
 
-                        if (!env.bpb) {
+                        if (!env.Avan) {
                             return new Response(errorPage, { status: 200, headers: {'Content-Type': 'text/html'}});
                         }
 
@@ -143,7 +143,7 @@ export default {
                             return Response.redirect(`${url.origin}/login`, 302);        
                         }
 
-                        if (! await env.bpb.get('proxySettings')) {
+                        if (! await env.Avan.get('proxySettings')) {
                             await updateDataset(env);
                         }
 
@@ -165,7 +165,7 @@ export default {
                                                       
                     case '/login':
 
-                        if (!env.bpb) {
+                        if (!env.Avan) {
                             return new Response(errorPage, { status: 200, headers: {'Content-Type': 'text/html'}});
                         }
 
@@ -173,23 +173,23 @@ export default {
                             return Response.redirect(`${url.origin}/panel`, 302);       
                         }
 
-                        let secretKey = await env.bpb.get('secretKey');
-                        let pwd = await env.bpb.get('pwd');
+                        let secretKey = await env.Avan.get('secretKey');
+                        let pwd = await env.Avan.get('pwd');
 
 
                         if (!pwd) {
-                            await env.bpb.put('pwd', 'admin');
+                            await env.Avan.put('pwd', 'admin');
                         }
 
                         if (!secretKey) {
                             secretKey = generateSecretKey();
-                            await env.bpb.put('secretKey', secretKey);
+                            await env.Avan.put('secretKey', secretKey);
                         }
 
 
                         if (request.method === 'POST') {
                             const password = await request.text();
-                            const savedPass = await env.bpb.get('pwd');
+                            const savedPass = await env.Avan.get('pwd');
 
                             if (password === savedPass) {
                                 const jwtToken = generateJWTToken(secretKey, password);
@@ -239,13 +239,13 @@ export default {
                         }
                         
                         const newPwd = await request.text();
-                        const oldPwd = await env.bpb.get('pwd');
+                        const oldPwd = await env.Avan.get('pwd');
 
                         if (newPwd === oldPwd) {
                             return new Response('Please enter a new Password!', { status: 400 });
                         }
 
-                        await env.bpb.put('pwd', newPwd);
+                        await env.Avan.put('pwd', newPwd);
 
                         return new Response('Success', {
                             status: 200,
@@ -833,7 +833,7 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 
 const getNormalConfigs = async (env, hostName, client) => {
     let vlessWsTls = '';
-    const { cleanIPs } = await env.bpb.get("proxySettings", {type: 'json'});
+    const { cleanIPs } = await env.Avan.get("proxySettings", {type: 'json'});
     const resolved = await resolveDNS(hostName);
     const Addresses = [
         hostName,
@@ -844,7 +844,7 @@ const getNormalConfigs = async (env, hostName, client) => {
     ];
 
     Addresses.forEach((addr) => {
-        let remark = `💦 BPB - ${addr}`;
+        let remark = `💦 Avan - ${addr}`;
         remark = remark.length <= 30 ? remark : `${remark.slice(0,29)}...`;
 
         vlessWsTls += `vless://${userID}@${addr}:443?encryption=none&security=tls&type=ws&host=${
@@ -965,7 +965,7 @@ const buildProxyOutbound = async (proxyParams) => {
 const getFragmentConfigs = async (env, hostName, client) => {
     let Configs = [];
     let outbounds = [];
-    let proxySettings = await env.bpb.get("proxySettings", {type: 'json'});
+    let proxySettings = await env.Avan.get("proxySettings", {type: 'json'});
     const {
         remoteDNS, 
         localDNS, 
@@ -997,7 +997,7 @@ const getFragmentConfigs = async (env, hostName, client) => {
         } catch (error) {
             console.log(error);
             proxyOutbound = undefined;
-            await env.bpb.put("proxySettings", JSON.stringify({
+            await env.Avan.put("proxySettings", JSON.stringify({
                 ...proxySettings, 
                 outProxy: '',
                 outProxyParams: ''}));
@@ -1008,7 +1008,7 @@ const getFragmentConfigs = async (env, hostName, client) => {
 
         let fragConfig = structuredClone(xrayConfigTemp);
         let outbound = structuredClone(xrayOutboundTemp);
-        let remark = `💦 BPB Frag - ${addr}`;
+        let remark = `💦 Avan Frag - ${addr}`;
         delete outbound.mux;
         delete outbound.streamSettings.grpcSettings;
         delete outbound.streamSettings.realitySettings;
@@ -1072,7 +1072,7 @@ const getFragmentConfigs = async (env, hostName, client) => {
 
 
     let bestPing = structuredClone(xrayConfigTemp);
-    bestPing.remarks = '💦 BPB Frag - Best Ping 💥';
+    bestPing.remarks = '💦 Avan Frag - Best Ping 💥';
     bestPing.dns.servers[0] = remoteDNS;
     bestPing.dns.servers[1].address = localDNS;
     bestPing.outbounds[2].settings.fragment.length = `${lengthMin}-${lengthMax}`;
@@ -1114,7 +1114,7 @@ const getSingboxConfig = async (env, hostName) => {
         remoteDNS, 
         localDNS,
         cleanIPs
-    } = await env.bpb.get("proxySettings", {type: 'json'});
+    } = await env.Avan.get("proxySettings", {type: 'json'});
 
     let config = structuredClone(singboxConfigTemp);
     config.dns.servers[0].address = remoteDNS;
@@ -1163,7 +1163,7 @@ const updateDataset = async (env, Settings) => {
     };
 
     try {    
-        await env.bpb.put("proxySettings", JSON.stringify(proxySettings));          
+        await env.Avan.put("proxySettings", JSON.stringify(proxySettings));          
     } catch (error) {
         throw new error(error);
     }
@@ -1237,7 +1237,7 @@ const generateSecretKey = () => {
 }
   
 const Authenticate = async (request, env) => {
-    const secretKey = await env.bpb.get('secretKey');
+    const secretKey = await env.Avan.get('secretKey');
 
     try {
         const cookie = request.headers.get('Cookie');
@@ -1278,7 +1278,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
         bypassIran,
         cleanIPs,
         outProxy
-    } = await env.bpb.get("proxySettings", {type: 'json'});
+    } = await env.Avan.get("proxySettings", {type: 'json'});
 
     const genCustomConfRow = async (configs) => {
         let tableBlock = "";
@@ -1512,7 +1512,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
 	</head>
 	
 	<body>
-		<h1 style="text-align: center; color: #2980b9">BPB Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
+		<h1 style="text-align: center; color: #2980b9">Avan Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
 		<div class="form-container">
             <h2>FRAGMENT SETTINGS ⚙️</h2>
 			<form id="configForm">
@@ -1612,7 +1612,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
                             </div>
                         </td>
 						<td>
-                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}#BPB%20Normal', false)">
+                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}#Avan%20Normal', false)">
                                 Copy Sub
                                 <span class="material-symbols-outlined">format_list_bulleted</span>
                             </button>
@@ -1634,7 +1634,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
                             </div>
                         </td>
 						<td>
-                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}?app=singbox#BPB-Normal', false)">
+                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}?app=singbox#Avan-Normal', false)">
                                 Copy Sub
                                 <span class="material-symbols-outlined">format_list_bulleted</span>
                             </button>
@@ -1648,7 +1648,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
                             </div>
                         </td>
                         <td>
-                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}?app=sfa#BPB-Normal', false)">
+                            <button onclick="copyToClipboard('https://${hostName}/sub/${userID}?app=sfa#Avan-Normal', false)">
                                 Copy Sub
                                 <span class="material-symbols-outlined">format_list_bulleted</span>
                             </button>
@@ -1680,7 +1680,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
                             </div>
                         </td>
                         <td>
-                            <button onclick="copyToClipboard('https://${hostName}/fragsub/${userID}#BPB Fragment', true)">
+                            <button onclick="copyToClipboard('https://${hostName}/fragsub/${userID}#Avan Fragment', true)">
                                 Copy Sub
                                 <span class="material-symbols-outlined">format_list_bulleted</span>
                             </button>
@@ -1718,7 +1718,7 @@ const renderHomePage = async (env, hostName, fragConfigs) => {
             </div>
             <div class="footer">
                 <i class="fa fa-github" style="font-size:36px; margin-right: 10px;"></i>
-                <a class="link" href="https://github.com/bia-pain-bache/BPB-Worker-Panel" target="_blank">Github</a>
+                <a class="link" href="https://github.com/bia-pain-bache/Avan-Worker-Panel" target="_blank">Github</a>
                 <button id="openModalBtn" class="button">Change Password</button>
                 <button type="button" id="logout" style="background: none; margin: 0; border: none; cursor: pointer;">
                     <i class="fa fa-power-off fa-2x" aria-hidden="true"></i>
@@ -2014,7 +2014,7 @@ const renderLoginPage = async () => {
     </head>
     <body>
         <div class="container">
-            <h1>BPB Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
+            <h1>Avan Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
             <div class="form-container">
                 <h2>User Login</h2>
                 <form id="loginForm">
@@ -2559,9 +2559,9 @@ const errorPage = `
 
     <body>
         <div id="error-container">
-            <h1>BPB Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
+            <h1>Avan Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
             <div id="error-message">
-                <h2>KV Dataset is not properly set! Please refer to <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel/blob/main/README.md">documents</a></h2>
+                <h2>KV Dataset is not properly set! Please refer to <a href="https://github.com/bia-pain-bache/Avan-Worker-Panel/blob/main/README.md">documents</a></h2>
             </div>
         </div>
     </body>
