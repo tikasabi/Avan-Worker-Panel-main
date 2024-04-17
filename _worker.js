@@ -2561,7 +2561,7 @@ const errorPage = `
         <div id="error-container">
             <h1>Avan Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
             <div id="error-message">
-                <h2>KV Dataset is not properly set! Please refer to <a href="https://github.com/bia-pain-bache/Avan-Worker-Panel/blob/main/README.md">documents</a></h2>
+                <h2>KV Dataset is not properly set! Please refer to <a href="https://github.com/bia-pain-bache/Avan-Worker-Panel">documents</a></h2>
             </div>
         </div>
     </body>
