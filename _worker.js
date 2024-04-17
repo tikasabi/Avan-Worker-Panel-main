@@ -258,7 +258,7 @@ export default {
                     default:
                         // return new Response('Not found', { status: 404 });
                         // For any other path, reverse proxy to 'www.fmprc.gov.cn' and return the original response
-                        url.hostname = 'www.speedtest.net';
+                        url.hostname = 'www.avan-music.ir';
                         url.protocol = 'https:';
                         request = new Request(url, request);
                         return await fetch(request);
