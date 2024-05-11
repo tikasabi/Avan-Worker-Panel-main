@@ -1763,7 +1763,7 @@ const renderHomePage = async (request, env, hostName, fragConfigs) => {
             <hr>
             <div class="footer">
                 <i class="fa fa-github" style="font-size:36px; margin-right: 10px;"></i>
-                <a class="link" href="https://github.com/bia-pain-bache/Avan-Worker-Panel" target="_blank">Github</a>
+                <a class="link" href="https://github.com/mehdint/Avan-Worker-Panel" target="_blank">Github</a>
                 <button id="openModalBtn" class="button">Change Password</button>
                 <button type="button" id="logout" style="background: none; margin: 0; border: none; cursor: pointer;">
                     <i class="fa fa-power-off fa-2x" aria-hidden="true"></i>
@@ -2163,7 +2163,7 @@ const renderErrorPage = (message, error, refer) => {
             <h1>Avan Panel <span style="font-size: smaller;">${panelVersion}</span> 💦</h1>
             <div id="error-message">
                 <h2>${message} ${refer 
-                    ? 'Please try again or refer to <a href="https://github.com/bia-pain-bache/Avan-Worker-Panel/blob/main/README.md">documents</a>' 
+                    ? 'Please try again or refer to <a href="https://github.com/mehdint/Avan-Worker-Panel">documents</a>' 
                     : ''}
                 </h2>
                 <p><b>${error ? `⚠️ ${error}` : ''}</b></p>
