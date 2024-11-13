@@ -4086,8 +4086,8 @@ var SignJWT = class extends ProduceJWT {
 
 // src/worker.js
 var userID = "89b3cbba-e6ac-485a-9481-976a0415eab9";
-var trojanPassword = `TIK#09350935`;
-var proxyIPs = ["bpb.yousef.isegaro.com"];
+var trojanPassword = `TIK#SBI02580258`;
+var proxyIPs = ["8.211.54.130"];
 var defaultHttpPorts = ["80", "8080", "2052", "2082", "2086", "2095", "8880"];
 var defaultHttpsPorts = ["443", "8443", "2053", "2083", "2087", "2096"];
 var proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
@@ -7157,7 +7157,7 @@ function buildXrayWarpOutbound(proxySettings, warpConfigs, endpoint, isChain, cl
         "172.16.0.2/32",
         warpIPv6
       ],
-      mtu: 1280,
+      mtu: 1120,
       peers: [
         {
           endpoint,
@@ -7707,7 +7707,7 @@ function buildClashWarpOutbound(warpConfigs, remark, endpoint, chain) {
     "allowed-ips": ["0.0.0.0/0", "::/0"],
     "reserved": reserved,
     "udp": true,
-    "mtu": 1280,
+    "mtu": 1120,
     "dialer-proxy": chain,
     "remote-dns-resolve": true,
     "dns": ["1.1.1.1", "1.0.0.1"]
@@ -8274,7 +8274,7 @@ function buildSingBoxWarpOutbound(proxySettings, warpConfigs, remark, endpoint, 
       "172.16.0.2/32",
       warpIPv6
     ],
-    mtu: 1280,
+    mtu: 1120,
     peer_public_key: publicKey,
     private_key: privateKey,
     reserved,
